@@ -1,0 +1,9 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="LearnEnglishApp:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/LearnEnglishApp_jar</output-path>
+    <root id="archive" name="LearnEnglishApp.jar">
+      <element id="module-output" name="LearnEnglishApp" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/fr/delthas/javamp3/1.0.1/javamp3-1.0.1.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>

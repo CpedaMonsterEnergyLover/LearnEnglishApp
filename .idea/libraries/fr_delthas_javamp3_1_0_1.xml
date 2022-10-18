@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="fr.delthas:javamp3:1.0.1" type="repository">
+    <properties maven-id="fr.delthas:javamp3:1.0.1" />
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/fr/delthas/javamp3/1.0.1/javamp3-1.0.1.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
