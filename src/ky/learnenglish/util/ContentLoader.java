@@ -42,18 +42,4 @@ public class ContentLoader {
         }
     }
 
-/*    private File GetAudioFromResource(String audioName){
-        ClassLoader classLoader = getClass().getClassLoader();
-        InputStream inputStream = classLoader.getResourceAsStream("voice/" + audioName);
-
-        File file = new File(audioName);
-        Path path = Paths.get(audioName);
-        try {
-            Files.copy(inputStream, path, StandardCopyOption.REPLACE_EXISTING);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-    }*/
-
 }
