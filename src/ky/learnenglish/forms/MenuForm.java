@@ -50,8 +50,6 @@ public class MenuForm extends BaseForm
                 new MainForm(finalI * 300 + 1, 300);
             });
         }
-
-//        VideoPlayer.GetVideo();
     }
 
 }

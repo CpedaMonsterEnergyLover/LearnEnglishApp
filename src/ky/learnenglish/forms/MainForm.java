@@ -2,6 +2,7 @@ package ky.learnenglish.forms;
 
 import ky.learnenglish.util.ContentLoader;
 
+import javax.imageio.ImageIO;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
@@ -9,6 +10,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -21,6 +24,7 @@ public class MainForm extends BaseForm {
     private JLabel wordNumberLabel;
     private JLabel leftPromoLabel;
     private JLabel rightPromoLabel;
+    private JLabel bgLabel;
     private List<String> lines;
 
     private int start;
@@ -28,7 +32,19 @@ public class MainForm extends BaseForm {
     private volatile boolean paused = false;
     private volatile Thread currentThread = null;
 
+
     public MainForm(int start, int amount){
+        /*BoxLayout layoutMgr = new BoxLayout(mainPanel, BoxLayout.PAGE_AXIS);
+        mainPanel.setLayout(layoutMgr);
+
+        JLabel iconLabel = new JLabel();
+        iconLabel.setIcon(imageIcon);
+        imageIcon.setImageObserver(iconLabel);
+        mainPanel.add(iconLabel);*/
+
+
+        ImageIcon ico = new ImageIcon("bg.gif");
+        bgLabel.setIcon(ico);
         this.start = start;
         this.amount = amount;
         lines = new ContentLoader().GetFile("vocabulary.txt");
@@ -141,7 +157,10 @@ public class MainForm extends BaseForm {
             StartRepeatThread();
             });
         currentThread.start();
+
     }
+
+
 
     private void StartMotivatorsTread() {
         PrepareMotivators();
