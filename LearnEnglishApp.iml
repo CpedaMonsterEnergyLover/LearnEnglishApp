@@ -11,5 +11,6 @@
     <orderEntry type="library" name="fr.delthas:javamp3:1.0.1" level="project" />
     <orderEntry type="library" name="org.openjfx:javafx-swing:18" level="project" />
     <orderEntry type="library" name="org.openjfx:javafx-media:18" level="project" />
+    <orderEntry type="library" name="me.asycc.MultiOS.HWID" level="project" />
   </component>
 </module>

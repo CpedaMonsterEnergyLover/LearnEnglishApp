@@ -1,9 +1,13 @@
 <component name="ArtifactManager">
-  <artifact type="jar" name="LearnEnglishApp:jar">
+  <artifact type="jar" build-on-make="true" name="LearnEnglishApp:jar">
     <output-path>$PROJECT_DIR$/out/artifacts/LearnEnglishApp_jar</output-path>
     <root id="archive" name="LearnEnglishApp.jar">
       <element id="module-output" name="LearnEnglishApp" />
       <element id="extracted-dir" path="$MAVEN_REPOSITORY$/fr/delthas/javamp3/1.0.1/javamp3-1.0.1.jar" path-in-jar="/" />
+      <element id="library" level="project" name="fr.delthas:javamp3:1.0.1" />
+      <element id="library" level="project" name="me.asycc.MultiOS.HWID" />
+      <element id="library" level="project" name="org.openjfx:javafx-swing:18" />
+      <element id="library" level="project" name="org.openjfx:javafx-media:18" />
     </root>
   </artifact>
 </component>

@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="me.asycc.MultiOS.HWID" type="repository">
+    <properties maven-id="me.asycc:MultiOS-HWID:1.1.1" />
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/me/asycc/MultiOS-HWID/1.1.1/MultiOS-HWID-1.1.1.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
