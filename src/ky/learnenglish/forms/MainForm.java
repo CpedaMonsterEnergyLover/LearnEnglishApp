@@ -2,6 +2,7 @@ package ky.learnenglish.forms;
 
 import ky.learnenglish.util.ContentLoader;
 
+import javax.imageio.ImageIO;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
@@ -9,11 +10,14 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class MainForm extends BaseForm {
+    private JPanelWithBg newPanel = new JPanelWithBg();
     private JPanel mainPanel;
     private JLabel engLabel;
     private JLabel kyrLabel;
@@ -21,6 +25,8 @@ public class MainForm extends BaseForm {
     private JLabel wordNumberLabel;
     private JLabel leftPromoLabel;
     private JLabel rightPromoLabel;
+    private JPanel labelPanel;
+    private JPanel promoPanel;
     private List<String> lines;
 
     private int start;
@@ -28,7 +34,34 @@ public class MainForm extends BaseForm {
     private volatile boolean paused = false;
     private volatile Thread currentThread = null;
 
+
+    private void removeBackgrounds(){
+        mainPanel.setBackground(new Color(Color.TRANSLUCENT));
+        mainPanel.setOpaque(false);
+        mainPanel.repaint();
+        engLabel.setBackground(new Color(Color.TRANSLUCENT));
+        engLabel.setOpaque(false);
+        engLabel.repaint();
+        kyrLabel.setBackground(new Color(Color.TRANSLUCENT));
+        kyrLabel.setOpaque(false);
+        kyrLabel.repaint();
+        ruLabel.setBackground(new Color(Color.TRANSLUCENT));
+        ruLabel.setOpaque(false);
+        ruLabel.repaint();
+        wordNumberLabel.setBackground(new Color(Color.TRANSLUCENT));
+        wordNumberLabel.setOpaque(false);
+        wordNumberLabel.repaint();
+        labelPanel.setBackground(new Color(Color.TRANSLUCENT));
+        labelPanel.setOpaque(false);
+        labelPanel.repaint();
+        //promoPanel.setBackground(new Color(Color.TRANSLUCENT));
+        //promoPanel.setOpaque(false);
+        //promoPanel.repaint();
+    }
+
     public MainForm(int start, int amount){
+        removeBackgrounds();
+        newPanel.add(mainPanel);
         this.start = start;
         this.amount = amount;
         lines = new ContentLoader().GetFile("vocabulary.txt");
@@ -36,7 +69,7 @@ public class MainForm extends BaseForm {
         setSize(new Dimension(screenSize.width, screenSize.height));
         setLocation(0, 0);
 
-        setContentPane(mainPanel);
+        setContentPane(newPanel);
         StartKeyListeners();
 
         setVisible(true);
@@ -141,6 +174,7 @@ public class MainForm extends BaseForm {
             StartRepeatThread();
             });
         currentThread.start();
+
     }
 
     private void StartMotivatorsTread() {

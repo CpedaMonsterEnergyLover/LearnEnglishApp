@@ -14,11 +14,11 @@ import javafx.scene.media.MediaView;
 import javafx.stage.Screen;
 
 public class VideoPlayer {
+// pohui
+ /*   public static void GetVideo(){
+        final JFXPanel VFXpanel = new JFXPanel();
 
-    public static void GetVideo(){
-        final JFXPanel videoPanel = new JFXPanel();
-
-        File video_source = new File("bg.mp4");
+        File video_source = new File("resources/bg.mp4");
         Media m = new Media(video_source.toURI().toString());
         MediaPlayer player = new MediaPlayer(m);
         MediaView viewer = new MediaView(player);
@@ -41,10 +41,10 @@ public class VideoPlayer {
         // add video to stackpane
         root.getChildren().add(viewer);
 
-        videoPanel.setScene(scene);
-        player.play();
+        VFXPanel.setScene(scene);
+        //player.play();
         videoPanel.setLayout(new BorderLayout());
-        videoPanel.add(videoPanel, BorderLayout.CENTER);
-    }
+        videoPanel.add(VFXPanel, BorderLayout.CENTER);
+    }*/
 
 }
