@@ -9,7 +9,7 @@ import java.io.IOException;
 
 public class HWIDprotecc {
     public static void checkHWID() throws Exception {
-        File prot = new File("resources/prot");
+        File prot = new File("prot");
         if(!prot.exists()){
             prot.createNewFile();
             String hwidStr = HWID.getHWID();
@@ -20,7 +20,7 @@ public class HWIDprotecc {
             String hwidStr = HWID.getHWID();
             String protStr = new String(java.nio.file.Files.readAllBytes(prot.toPath()));
             if(!protStr.equals(hwidStr)){
-                JOptionPane.showMessageDialog(null, "Pirating is prohibited! Please, buy the program!");
+                JOptionPane.showMessageDialog(null, "Эмм... Кажется, вы пытаетесь запустить программу на другом компьютере. Пожалуйста, купите лицензию отдельно для этого компьютера.");
                 System.exit(0);
             }
         }
