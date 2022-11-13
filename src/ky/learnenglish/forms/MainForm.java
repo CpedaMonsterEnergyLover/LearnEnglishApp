@@ -204,7 +204,14 @@ public class MainForm extends BaseForm {
     private void PrepareKeyListeners(){
         JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(newPanel);
         System.out.println("Prepare listeners");
-        topFrame.addKeyListener(new KeyAdapter() {
+        topFrame.setFocusable(true);
+        topFrame.requestFocus();
+        topFrame.addKeyListener(new KeyListener() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+
+            }
+
             @Override
             public void keyPressed(KeyEvent e) {
                 int keyCode = e.getKeyCode();
@@ -219,6 +226,11 @@ public class MainForm extends BaseForm {
                     }
                     new MenuForm();
                 }
+            }
+
+            @Override
+            public void keyReleased(KeyEvent e) {
+
             }
         });
     }
