@@ -194,6 +194,7 @@ public class MainForm extends BaseForm {
 
     private void SetPause(boolean isPaused){
         if(!lessonStarted) return;
+        System.out.println("Pause");
         paused = isPaused;
         progressSlider.setVisible(isPaused);
         if(isPaused) PauseMusic();
@@ -202,11 +203,12 @@ public class MainForm extends BaseForm {
 
     private void PrepareKeyListeners(){
         JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(newPanel);
-
+        System.out.println("Prepare listeners");
         topFrame.addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
                 int keyCode = e.getKeyCode();
+                System.out.println(keyCode);
                 if (keyCode == KeyEvent.VK_SPACE) {
                     SetPause(!paused);
                 } else if (keyCode == KeyEvent.VK_ESCAPE) {
@@ -230,6 +232,7 @@ public class MainForm extends BaseForm {
                 Thread.currentThread().interrupt();
             }
             lessonStarted = true;
+            System.out.println("Lesson started");
             StartMotivatorsThread(0);
         });
         currentThread.start();
