@@ -218,7 +218,7 @@ public class MainForm extends BaseForm {
                 System.out.println(keyCode);
                 if (keyCode == KeyEvent.VK_SPACE) {
                     SetPause(!paused);
-                } else if (keyCode == KeyEvent.VK_ESCAPE) {
+                } else if (keyCode == KeyEvent.VK_ESCAPE && lessonStarted) {
                     dispose();
                     if(currentThread != null && currentThread.isAlive()) {
                         currentThread.interrupt();
