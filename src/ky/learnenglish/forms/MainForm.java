@@ -1,5 +1,6 @@
 package ky.learnenglish.forms;
 
+import com.github.kwhat.jnativehook.GlobalScreen;
 import ky.learnenglish.util.ContentLoader;
 import ky.learnenglish.util.Mathf;
 
@@ -11,9 +12,12 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.Hashtable;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class MainForm extends BaseForm {
+    public static MainForm Instance;
+
     private final JPanelWithBg newPanel = new JPanelWithBg();
     private JPanel mainPanel;
     private JLabel engLabel;
@@ -30,11 +34,12 @@ public class MainForm extends BaseForm {
     private JPanel promoPanel;
     private JSlider progressSlider;
     private JPanel creditsPanel;
+    private JLabel словарейКылычбековаПКLabel;
     private final List<String> lines;
 
     private final int start;
     private final int amount;
-    private volatile boolean paused = false;
+    public static volatile boolean paused = false;
     private volatile Thread currentThread = null;
 
     private static final Color darkTextColor = new Color(60, 63, 65);
@@ -79,10 +84,15 @@ public class MainForm extends BaseForm {
         progressSlider.setBackground(new Color(Color.TRANSLUCENT));
         progressSlider.setOpaque(false);
         progressSlider.repaint();
+
     }
 
     public MainForm(int start, int amount, boolean finalWeek){
+        classLoader = getClass().getClassLoader();
+        Instance = this;
+        GlobalScreen.addNativeKeyListener(new ky.learnenglish.util.KeyListener());
         removeBackgrounds();
+        PrepareMusicClip();
         newPanel.add(mainPanel);
         this.start = start;
         this.finalWeek = finalWeek;
@@ -91,13 +101,26 @@ public class MainForm extends BaseForm {
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         setSize(new Dimension(screenSize.width, screenSize.height));
         setLocation(0, 0);
-        classLoader = getClass().getClassLoader();
         setContentPane(newPanel);
-        PrepareKeyListeners();
         creditsPanel.setVisible(false);
         setVisible(true);
         PrepareSlider();
         StartIntroThread();
+    }
+
+    private void PrepareMusicClip(){
+        try {
+            currentMusicClip = AudioSystem.getClip();
+            URL path = classLoader.getResource("music.wav");
+            AudioInputStream ais = AudioSystem.getAudioInputStream(path);
+            currentMusicClip.open(ais);
+            currentMusicClip.setFramePosition(0);
+            currentMusicClip.loop(Clip.LOOP_CONTINUOUSLY);
+            currentMusicClip.stop();
+        } catch (LineUnavailableException | UnsupportedAudioFileException | IOException e) {
+            e.printStackTrace();
+        }
+
     }
 
 
@@ -127,7 +150,6 @@ public class MainForm extends BaseForm {
             public void mouseReleased(MouseEvent e) {
                 SetPause(false);
                 int newValue = progressSlider.getValue();
-                System.out.println("MOUSE RELEASE " + newValue);
                 if (newValue < 100) {
                     int calc = Mathf.Lerp(newValue / 100f, 0, 120);
                     StartMotivatorsThread(calc);
@@ -145,18 +167,13 @@ public class MainForm extends BaseForm {
                     StartLessonTread(calc, 3);
                 }
             }
-
-            @Override
-            public void mouseMoved(MouseEvent e) {
-                System.out.println(progressSlider.getValue());
-            }
         });
 
     }
 
     private void PrepareMotivators(){
         StartMusic();
-        newPanel.SetImage("spiral_2.gif");
+        newPanel.SetImage(JPanelWithBg.Background.SECOND);
         engLabel.setVisible(false);
         ruLabel.setVisible(false);
         kyrLabel.setVisible(true);
@@ -178,7 +195,7 @@ public class MainForm extends BaseForm {
 
     private void PrepareLesson(int loop){
         StartMusic();
-        newPanel.SetImage(loop == 2 ? "spiral_2.gif" : "spiral_1.gif");
+        newPanel.SetImage(loop == 2 ? JPanelWithBg.Background.SECOND : JPanelWithBg.Background.FIRST);
         engLabel.setVisible(true);
         ruLabel.setVisible(true);
         kyrLabel.setVisible(true);
@@ -187,7 +204,7 @@ public class MainForm extends BaseForm {
 
     private void PrepareRepeat(){
         StopMusic();
-        newPanel.SetImage("clouds.jpg");
+        newPanel.SetImage(JPanelWithBg.Background.SKY);
         ruLabel.setForeground(darkTextColor);
         kyrLabel.setForeground(darkTextColor);
         engLabel.setForeground(darkTextColor);
@@ -213,46 +230,37 @@ public class MainForm extends BaseForm {
         kyrLabel.setIcon(imageIcon);
     }
 
-    private void SetPause(boolean isPaused){
-        if(!lessonStarted) return;
-        paused = isPaused;
-        progressSlider.setVisible(isPaused);
-        if(isPaused) {
-            PauseMusic();
-            progressSlider.requestFocus();
+    public void SetPause(boolean isPaused){
+        if(lessonStarted) {
+            if(isPaused){
+                paused = true;
+                PauseMusic();
+                progressSlider.setVisible(true);
+                progressSlider.requestFocus();
+            } else {
+                progressSlider.setVisible(false);
+                StartMusic();
+                paused = false;
+            }
+        } else {
+            if(currentThread != null && currentThread.isAlive())
+                currentThread.interrupt();
         }
-        else StartMusic();
     }
 
-    private void PrepareKeyListeners(){
-        JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(newPanel);
-        topFrame.setFocusable(true);
-//        topFrame.requestFocus();
-        topFrame.addKeyListener(new KeyListener() {
-            @Override
-            public void keyTyped(KeyEvent e) { }
-            @Override
-            public void keyPressed(KeyEvent e) {
-                int keyCode = e.getKeyCode();
-                if (keyCode == KeyEvent.VK_SPACE) {
-                    if(!lessonStarted) {
-                        if(currentThread != null && currentThread.isAlive()) currentThread.interrupt();
-                    } else SetPause(!paused);
-                } else if (keyCode == KeyEvent.VK_ESCAPE && lessonStarted) {
-                    dispose();
-                    if(currentThread != null && currentThread.isAlive()) {
-                        StopMusic();
-                        currentThread.interrupt();
-                    }
-                    new MenuForm();
-                }
-            }
-            @Override
-            public void keyReleased(KeyEvent e) { }
-        });
+    public boolean Close(){
+        if(!lessonStarted) return false;
+        dispose();
+        if(currentThread != null && currentThread.isAlive()) {
+            StopMusic();
+            currentThread.interrupt();
+        }
+        new MenuForm();
+        return true;
     }
 
     private void StartIntroThread(){
+        System.out.println("Starting intro");
         PrepareIntro();
         currentThread = new Thread(() -> {
             try {
@@ -261,13 +269,13 @@ public class MainForm extends BaseForm {
                 Thread.currentThread().interrupt();
                 StartSecondIntroThread();
             }
-            StartSecondIntroThread();
+            if(!Thread.currentThread().isInterrupted()) StartSecondIntroThread();
         });
         currentThread.start();
     }
 
     private void StartSecondIntroThread(){
-        PrepareIntro();
+        System.out.println("Starting second intro");
         currentThread = new Thread(() -> {
             try {
                 creditsPanel.setVisible(true);
@@ -280,6 +288,7 @@ public class MainForm extends BaseForm {
                 StartMotivatorsThread(0);
                 Thread.currentThread().interrupt();
             }
+            if(Thread.currentThread().isInterrupted()) return;
             lessonStarted = true;
             StartMotivatorsThread(0);
         });
@@ -294,28 +303,25 @@ public class MainForm extends BaseForm {
             int counter = startpos;
             while (counter < 120 && !Thread.currentThread().isInterrupted()){
                 if(paused) continue;
-
                 int item = 0;
-                while(item < length) {
-                    if(paused) continue;
-                    if(Thread.currentThread().isInterrupted()) return;
+                while(item < length){
                     kyrLabel.setText(lines.get(item));
                     try {
-                        UpdateProgress(counter / 120f, 0, 100);
-                        Thread.sleep(96);
+                        Thread.sleep(100);
                     } catch (InterruptedException e) {
                         Thread.currentThread().interrupt();
                     }
                     item++;
                 }
 
+                UpdateProgress(counter / 120f, 0, 100);
                 counter++;
             }
-            if(Thread.currentThread().isInterrupted()) return;
+            if(!Thread.currentThread().isInterrupted()) return;
             try {
                 kyrLabel.setText("Приготовьтесь к уроку");
-                Thread.sleep(60000);
-                StartLessonTread(0, 1);
+                Thread.sleep(5000);
+                StartLessonTread(0, 0);
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
             }
@@ -426,45 +432,34 @@ public class MainForm extends BaseForm {
     private boolean isPlaying;
     private Clip currentMusicClip = null;
     private long pausedClipTime = 0;
+    private boolean musicPaused;
 
     private void StartMusic(){
-        try {
-            if(pausedClipTime > 0) {
-                currentMusicClip.start();
-            } else if (!isPlaying) {
-                isPlaying = true;
-                currentMusicClip = AudioSystem.getClip();
-                URL path = classLoader.getResource("music.wav");
-                AudioInputStream ais = AudioSystem.getAudioInputStream(path);
-                currentMusicClip.open(ais);
-                currentMusicClip.setFramePosition(0);
-                currentMusicClip.loop(Clip.LOOP_CONTINUOUSLY);
-                currentMusicClip.start();
-            }
-        } catch (LineUnavailableException | UnsupportedAudioFileException | IOException e) {
-            e.printStackTrace();
+        if(musicPaused && pausedClipTime > -1) {
+            currentMusicClip.setMicrosecondPosition(pausedClipTime);
         }
+        else currentMusicClip.setMicrosecondPosition(0);
+        isPlaying = true;
+        currentMusicClip.start();
+        musicPaused = false;
     }
 
     private void StopMusic(){
         if(!isPlaying) return;
-        currentMusicClip.close();
         currentMusicClip.stop();
-        currentMusicClip.flush();
         pausedClipTime = 0;
-        currentMusicClip = null;
         isPlaying = false;
     }
 
     private void PauseMusic(){
         if(!isPlaying) return;
+        musicPaused = true;
         pausedClipTime = currentMusicClip.getMicrosecondPosition();
         currentMusicClip.stop();
     }
 
     private void UpdateProgress(float current, int stagemin, int stagemax) {
         int value = Mathf.Lerp(current, stagemin, stagemax);
-        System.out.println("updated progress to " + stagemin + value);
         progressSlider.setValue(stagemin + value);
     }
 

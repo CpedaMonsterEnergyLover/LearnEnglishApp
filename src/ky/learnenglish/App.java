@@ -1,5 +1,7 @@
 package ky.learnenglish;
 import asyc.hwid.HWID;
+import com.github.kwhat.jnativehook.GlobalScreen;
+import com.github.kwhat.jnativehook.NativeHookException;
 import ky.learnenglish.forms.MenuForm;
 import ky.learnenglish.util.HWIDprotecc;
 
@@ -10,6 +12,16 @@ import java.net.URL;
 public class App {
 
     public static void main(String[] args) {
+
+        try {
+            GlobalScreen.registerNativeHook();
+        }
+        catch (NativeHookException ex) {
+            System.err.println("There was a problem registering the native hook.");
+            System.err.println(ex.getMessage());
+
+            System.exit(1);
+        }
 
         try {
             HWIDprotecc.checkHWID();

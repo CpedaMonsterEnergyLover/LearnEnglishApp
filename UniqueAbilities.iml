@@ -12,5 +12,6 @@
     <orderEntry type="library" name="org.openjfx:javafx-swing:18" level="project" />
     <orderEntry type="library" name="org.openjfx:javafx-media:18" level="project" />
     <orderEntry type="library" name="me.asycc.MultiOS.HWID" level="project" />
+    <orderEntry type="library" name="com.github.kwhat:jnativehook:2.2.2" level="project" />
   </component>
 </module>

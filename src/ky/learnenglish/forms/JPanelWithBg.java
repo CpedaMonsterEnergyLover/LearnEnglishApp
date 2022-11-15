@@ -7,17 +7,50 @@ public class JPanelWithBg extends JPanel {
     private Image image;
     private static ClassLoader classLoader;
 
-    public void SetImage(String name){
-        java.net.URL imageURL = classLoader.getResource(name);
-        ImageIcon imageIcon = new ImageIcon(imageURL);
-        this.image = imageIcon.getImage();
+    private static ImageIcon firstBg;
+    private static ImageIcon secondBg;
+    private static ImageIcon skyBg;
+    private static ImageIcon blueBg;
+
+    enum Background {
+        SKY,
+        FIRST,
+        SECOND,
+        BLUE
+    }
+
+    public void SetImage(Background image){
+        switch (image) {
+            case SKY:
+                this.image = skyBg.getImage();
+                break;
+            case FIRST:
+                this.image = firstBg.getImage();
+                break;
+            case SECOND:
+                this.image = secondBg.getImage();
+                break;
+            case BLUE:
+                this.image = blueBg.getImage();
+                break;
+        }
+
     };
 
     JPanelWithBg() {
         classLoader = this.getClass().getClassLoader();
+
+        java.net.URL imageURL3 = classLoader.getResource("royal_blue.jpg");
+        blueBg = new ImageIcon(imageURL3);
+        java.net.URL imageURL = classLoader.getResource("spiral_1.gif");
+        firstBg = new ImageIcon(imageURL);
+        java.net.URL imageURL1 = classLoader.getResource("spiral_2.gif");
+        secondBg = new ImageIcon(imageURL1);
+        java.net.URL imageURL2 = classLoader.getResource("clouds.jpg");
+        skyBg = new ImageIcon(imageURL2);
         GridLayout experimentLayout = new GridLayout(1,1);
         setLayout(experimentLayout);
-        SetImage("royal_blue.jpg");
+        SetImage(Background.BLUE);
     }
 
     @Override
