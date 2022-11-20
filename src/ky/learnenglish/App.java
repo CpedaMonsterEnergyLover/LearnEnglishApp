@@ -1,7 +1,6 @@
 package ky.learnenglish;
-import asyc.hwid.HWID;
-import com.github.kwhat.jnativehook.GlobalScreen;
-import com.github.kwhat.jnativehook.NativeHookException;
+
+import com.github.kwhat.jnativehook.*;
 import ky.learnenglish.forms.MenuForm;
 import ky.learnenglish.util.HWIDprotecc;
 
@@ -30,7 +29,7 @@ public class App {
             e.printStackTrace();
         }
         Thread abc = new Thread(() -> {
-            URL url = null;
+            URL url;
             try {
                 url = new URL("https://cpedamonsterenergylover.pythonanywhere.com/");
                 HttpURLConnection con = (HttpURLConnection) url.openConnection();

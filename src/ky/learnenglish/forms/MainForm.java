@@ -7,12 +7,12 @@ import ky.learnenglish.util.Mathf;
 import javax.sound.sampled.*;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Hashtable;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class MainForm extends BaseForm {
@@ -87,7 +87,12 @@ public class MainForm extends BaseForm {
 
     }
 
+
+    static GraphicsDevice device = GraphicsEnvironment
+            .getLocalGraphicsEnvironment().getScreenDevices()[0];
+
     public MainForm(int start, int amount, boolean finalWeek){
+        device.setFullScreenWindow(this);
         classLoader = getClass().getClassLoader();
         Instance = this;
         GlobalScreen.addNativeKeyListener(new ky.learnenglish.util.KeyListener());
@@ -102,6 +107,7 @@ public class MainForm extends BaseForm {
         setSize(new Dimension(screenSize.width, screenSize.height));
         setLocation(0, 0);
         setContentPane(newPanel);
+        promoPanel.setVisible(false);
         creditsPanel.setVisible(false);
         setVisible(true);
         PrepareSlider();

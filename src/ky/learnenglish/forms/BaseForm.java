@@ -1,6 +1,5 @@
 package ky.learnenglish.forms;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 
