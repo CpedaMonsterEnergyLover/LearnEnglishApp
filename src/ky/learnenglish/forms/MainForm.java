@@ -172,6 +172,7 @@ public class MainForm extends BaseForm {
     }
 
     private void PrepareMotivators(){
+        HidePromo();
         StartMusic();
         newPanel.SetImage(JPanelWithBg.Background.SECOND);
         engLabel.setVisible(false);
@@ -194,6 +195,7 @@ public class MainForm extends BaseForm {
     }
 
     private void PrepareLesson(int loop){
+        HidePromo();
         StartMusic();
         newPanel.SetImage(loop == 2 ? JPanelWithBg.Background.SECOND : JPanelWithBg.Background.FIRST);
         engLabel.setVisible(true);
@@ -203,6 +205,7 @@ public class MainForm extends BaseForm {
     }
 
     private void PrepareRepeat(){
+        ShowPromo();
         StopMusic();
         newPanel.SetImage(JPanelWithBg.Background.SKY);
         ruLabel.setForeground(darkTextColor);
@@ -214,9 +217,18 @@ public class MainForm extends BaseForm {
         wordNumberLabel.setVisible(true);
     }
 
+    private void ShowPromo(){
+        promoPanel.setVisible(true);
+    }
+
+    private void HidePromo(){
+        promoPanel.setVisible(false);
+    }
+
     private void PrepareIntro(){
         engLabel.setVisible(false);
         wordNumberLabel.setVisible(false);
+        HidePromo();
 
         ruLabel.setVisible(true);
         ruLabel.setText("Англис жана Орус тилдерин 2 айда үйрөнүү");
@@ -233,11 +245,13 @@ public class MainForm extends BaseForm {
     public void SetPause(boolean isPaused){
         if(lessonStarted) {
             if(isPaused){
+                ShowPromo();
                 paused = true;
                 PauseMusic();
                 progressSlider.setVisible(true);
                 progressSlider.requestFocus();
             } else {
+                HidePromo();
                 progressSlider.setVisible(false);
                 StartMusic();
                 paused = false;
@@ -320,7 +334,7 @@ public class MainForm extends BaseForm {
             if(!Thread.currentThread().isInterrupted()) return;
             try {
                 kyrLabel.setText("Приготовьтесь к уроку");
-                Thread.sleep(5000);
+                Thread.sleep(20000);
                 StartLessonTread(0, 0);
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
@@ -354,10 +368,18 @@ public class MainForm extends BaseForm {
                 }
             if(Thread.currentThread().isInterrupted()) return;
             if(loop == 2){
+                try {
+                    kyrLabel.setText("Приготовьтесь к уроку");
+                    Thread.sleep(20000);
+                    StartLessonTread(0, 0);
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                }
                 StartRepeatThread(0);
             } else if (loop == 1){
                 StartLessonTread(0, 2);
             } else if (loop == 3){
+
                 EndLesson();
             }
         });
@@ -423,6 +445,13 @@ public class MainForm extends BaseForm {
             if(finalWeek) {
                 EndLesson();
             } else {
+                try {
+                    kyrLabel.setText("Приготовьтесь к уроку");
+                    Thread.sleep(20000);
+                    StartLessonTread(0, 0);
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                }
                 StartLessonTread(0, 3);
             }
         });

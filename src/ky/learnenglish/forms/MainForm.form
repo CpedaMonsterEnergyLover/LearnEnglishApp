@@ -3,7 +3,7 @@
   <grid id="27dc6" binding="mainPanel" layout-manager="GridLayoutManager" row-count="5" column-count="3" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
     <margin top="0" left="0" bottom="0" right="0"/>
     <constraints>
-      <xy x="20" y="20" width="5514" height="1103"/>
+      <xy x="20" y="20" width="5514" height="1133"/>
     </constraints>
     <properties/>
     <border type="none"/>
@@ -64,7 +64,7 @@
                 <properties>
                   <font name="Droid Sans Mono" size="94"/>
                   <foreground color="-14336"/>
-                  <text value="Автор - Edmond Baly"/>
+                  <text value="Автор -                                              Edmond Baly"/>
                 </properties>
               </component>
               <component id="cbee5" class="javax.swing.JLabel" binding="creditsLine2">
@@ -74,7 +74,7 @@
                 <properties>
                   <font name="Droid Sans Mono" size="94"/>
                   <foreground color="-14336"/>
-                  <text value="Редактор кыргызского, английского, русского"/>
+                  <text value="Редактор  кыргызского,  английского,   русского"/>
                 </properties>
               </component>
               <component id="fa62a" class="javax.swing.JLabel" binding="словарейКылычбековаПКLabel" default-binding="true">
@@ -84,7 +84,7 @@
                 <properties>
                   <font name="Droid Sans Mono" size="94"/>
                   <foreground color="-14336"/>
-                  <text value="словарей - Кылычбекова П.К. (КР)"/>
+                  <text value="словарей -                       Кылычбекова П.К. (КР)"/>
                 </properties>
               </component>
               <component id="d5648" class="javax.swing.JLabel" binding="creditsLine3">
@@ -104,7 +104,7 @@
                 <properties>
                   <font name="Droid Sans Mono" size="94"/>
                   <foreground color="-14336"/>
-                  <text value="Музыкальный редактор - Селиванов Д.И. (РФ)"/>
+                  <text value="Музыкальный редактор -   Селиванов Д.И. (РФ)"/>
                 </properties>
               </component>
             </children>
@@ -133,9 +133,10 @@
           </grid>
         </constraints>
         <properties>
-          <background color="-1974060"/>
+          <background color="-15658993"/>
+          <foreground color="-15527149"/>
         </properties>
-        <border type="none"/>
+        <border type="none" title=""/>
         <children>
           <component id="c313" class="javax.swing.JLabel" binding="leftPromoLabel">
             <constraints>
@@ -144,7 +145,7 @@
             <properties>
               <font name="Droid Sans" size="28"/>
               <foreground color="-12237499"/>
-              <text value=""/>
+              <text value="реклама"/>
             </properties>
           </component>
           <component id="12eb8" class="javax.swing.JLabel" binding="rightPromoLabel">
@@ -154,7 +155,7 @@
             <properties>
               <font name="Droid Sans" size="28"/>
               <foreground color="-12237499"/>
-              <text value=""/>
+              <text value="реклама"/>
             </properties>
           </component>
           <grid id="43320" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
