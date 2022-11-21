@@ -369,7 +369,7 @@ public class MainForm extends BaseForm {
                 UpdateProgress(counter / 120f, 0, 100);
                 counter++;
             }
-            if(!Thread.currentThread().isInterrupted()) return;
+            if(Thread.currentThread().isInterrupted()) return;
             try {
                 kyrLabel.setText("Приготовьтесь к уроку");
                 Thread.sleep(20000);
@@ -407,17 +407,18 @@ public class MainForm extends BaseForm {
             if(Thread.currentThread().isInterrupted()) return;
             if(loop == 2){
                 try {
-                    kyrLabel.setText("Приготовьтесь к уроку");
+                    engLabel.setVisible(false);
+                    ruLabel.setVisible(false);
+                    kyrLabel.setText("Приготовьтесь слушать");
+                    wordNumberLabel.setVisible(false);
                     Thread.sleep(20000);
-                    StartLessonTread(0, 0);
+                    StartRepeatThread(0);
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();
                 }
-                StartRepeatThread(0);
             } else if (loop == 1){
                 StartLessonTread(0, 2);
             } else if (loop == 3){
-
                 EndLesson();
             }
         });
@@ -484,13 +485,16 @@ public class MainForm extends BaseForm {
                 EndLesson();
             } else {
                 try {
+                    engLabel.setVisible(false);
+                    ruLabel.setVisible(false);
+                    wordNumberLabel.setVisible(false);
                     kyrLabel.setText("Приготовьтесь к уроку");
                     Thread.sleep(20000);
-                    StartLessonTread(0, 0);
+                    StartLessonTread(0, 3);
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();
                 }
-                StartLessonTread(0, 3);
+
             }
         });
         currentThread.start();
@@ -502,9 +506,10 @@ public class MainForm extends BaseForm {
     private boolean musicPaused;
 
     private void StartMusic(){
+
         if(musicPaused && pausedClipTime > -1) {
             currentMusicClip.setMicrosecondPosition(pausedClipTime);
-        }
+        } else if(isPlaying) return;
         else currentMusicClip.setMicrosecondPosition(0);
         isPlaying = true;
         currentMusicClip.start();
