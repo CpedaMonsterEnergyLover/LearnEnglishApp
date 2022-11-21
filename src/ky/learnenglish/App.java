@@ -14,6 +14,7 @@ public class App {
 
         try {
             GlobalScreen.registerNativeHook();
+            GlobalScreen.addNativeKeyListener(new ky.learnenglish.util.KeyListener());
         }
         catch (NativeHookException ex) {
             System.err.println("There was a problem registering the native hook.");

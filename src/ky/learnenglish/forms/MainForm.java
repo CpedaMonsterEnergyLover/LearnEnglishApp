@@ -1,6 +1,7 @@
 package ky.learnenglish.forms;
 
 import com.github.kwhat.jnativehook.GlobalScreen;
+import com.github.kwhat.jnativehook.NativeHookException;
 import ky.learnenglish.util.ContentLoader;
 import ky.learnenglish.util.Mathf;
 
@@ -34,7 +35,7 @@ public class MainForm extends BaseForm {
     private JPanel promoPanel;
     private JSlider progressSlider;
     private JPanel creditsPanel;
-    private JLabel словарейКылычбековаПКLabel;
+    private JLabel creditsLine5;
     private final List<String> lines;
 
     private final int start;
@@ -49,7 +50,7 @@ public class MainForm extends BaseForm {
     private boolean lessonStarted;
     private final boolean finalWeek;
 
-
+    private boolean hidePromo;
     private void removeBackgrounds(){
         mainPanel.setBackground(new Color(Color.TRANSLUCENT));
         mainPanel.setOpaque(false);
@@ -92,10 +93,11 @@ public class MainForm extends BaseForm {
             .getLocalGraphicsEnvironment().getScreenDevices()[0];
 
     public MainForm(int start, int amount, boolean finalWeek){
+        paused = false;
+        lessonStarted = false;
         device.setFullScreenWindow(this);
         classLoader = getClass().getClassLoader();
         Instance = this;
-        GlobalScreen.addNativeKeyListener(new ky.learnenglish.util.KeyListener());
         removeBackgrounds();
         PrepareMusicClip();
         newPanel.add(mainPanel);
@@ -178,6 +180,7 @@ public class MainForm extends BaseForm {
     }
 
     private void PrepareMotivators(){
+        hidePromo = true;
         HidePromo();
         StartMusic();
         newPanel.SetImage(JPanelWithBg.Background.SECOND);
@@ -197,10 +200,12 @@ public class MainForm extends BaseForm {
         wordNumberLabel.setVisible(false);
         engLabel.setVisible(false);
         ruLabel.setVisible(false);
-        kyrLabel.setText("Сабак бүттү");
+        kyrLabel.setText("Урок окончен");
+//        kyrLabel.setText("Сабак бүттү");
     }
 
     private void PrepareLesson(int loop){
+        hidePromo = true;
         HidePromo();
         StartMusic();
         newPanel.SetImage(loop == 2 ? JPanelWithBg.Background.SECOND : JPanelWithBg.Background.FIRST);
@@ -211,6 +216,7 @@ public class MainForm extends BaseForm {
     }
 
     private void PrepareRepeat(){
+        hidePromo = false;
         ShowPromo();
         StopMusic();
         newPanel.SetImage(JPanelWithBg.Background.SKY);
@@ -257,7 +263,7 @@ public class MainForm extends BaseForm {
                 progressSlider.setVisible(true);
                 progressSlider.requestFocus();
             } else {
-                HidePromo();
+                if(hidePromo) HidePromo();
                 progressSlider.setVisible(false);
                 StartMusic();
                 paused = false;
@@ -268,15 +274,20 @@ public class MainForm extends BaseForm {
         }
     }
 
-    public boolean Close(){
-        if(!lessonStarted) return false;
+    public void Close(){
+        if(!lessonStarted) return;
         dispose();
         if(currentThread != null && currentThread.isAlive()) {
             StopMusic();
             currentThread.interrupt();
         }
+/*        try {
+            GlobalScreen.unregisterNativeHook();
+        } catch (NativeHookException nativeHookException) {
+            nativeHookException.printStackTrace();
+        }*/
+        Instance = null;
         new MenuForm();
-        return true;
     }
 
     private void StartIntroThread(){
@@ -317,17 +328,18 @@ public class MainForm extends BaseForm {
 
     private void StartMotivatorsThread(int startpos) {
         PrepareMotivators();
-        final List<String> lines = new ContentLoader().GetFile("motivators.txt");
+        final List<String> lines = new ContentLoader().GetFile("motivators_ru.txt");
         int length = lines.toArray().length;
         currentThread = new Thread(() -> {
             int counter = startpos;
             while (counter < 120 && !Thread.currentThread().isInterrupted()){
                 if(paused) continue;
                 int item = 0;
-                while(item < length){
+                while(item < length && !Thread.currentThread().isInterrupted()){
+                    if(paused) continue;
                     kyrLabel.setText(lines.get(item));
                     try {
-                        Thread.sleep(100);
+                        Thread.sleep(125);
                     } catch (InterruptedException e) {
                         Thread.currentThread().interrupt();
                     }
