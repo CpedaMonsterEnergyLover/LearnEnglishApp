@@ -1,7 +1,5 @@
 package ky.learnenglish.forms;
 
-import com.github.kwhat.jnativehook.GlobalScreen;
-import com.github.kwhat.jnativehook.NativeHookException;
 import ky.learnenglish.util.ContentLoader;
 import ky.learnenglish.util.Mathf;
 
@@ -89,13 +87,13 @@ public class MainForm extends BaseForm {
     }
 
 
-    static GraphicsDevice device = GraphicsEnvironment
-            .getLocalGraphicsEnvironment().getScreenDevices()[0];
+    static GraphicsDevice device[] = GraphicsEnvironment
+            .getLocalGraphicsEnvironment().getScreenDevices();
 
     public MainForm(int start, int amount, boolean finalWeek){
         paused = false;
         lessonStarted = false;
-        device.setFullScreenWindow(this);
+        device[device.length-1].setFullScreenWindow(this);
         classLoader = getClass().getClassLoader();
         Instance = this;
         removeBackgrounds();
