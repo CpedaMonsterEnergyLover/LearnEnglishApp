@@ -19,8 +19,8 @@ public abstract class BaseForm extends JFrame {
     public BaseForm (){
         setTitle(WINDOW_TITLE);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setResizable(false);
-
+        setResizable(true);
+        setMinimumSize(new Dimension(800, 600));
 //        setIconImage(WINDOW_ICON);
     }
 

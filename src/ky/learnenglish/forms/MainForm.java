@@ -2,6 +2,7 @@ package ky.learnenglish.forms;
 
 import ky.learnenglish.util.ContentLoader;
 import ky.learnenglish.util.Mathf;
+import ky.learnenglish.util.Settings;
 
 import javax.sound.sampled.*;
 import javax.swing.*;
@@ -29,11 +30,11 @@ public class MainForm extends BaseForm {
     private JLabel creditsLine2;
     private JLabel creditsLine3;
     private JLabel creditsLine4;
+    private JLabel creditsLine5;
     private JPanel labelPanel;
     private JPanel promoPanel;
     private JSlider progressSlider;
     private JPanel creditsPanel;
-    private JLabel creditsLine5;
     private final List<String> lines;
 
     private final int start;
@@ -49,6 +50,20 @@ public class MainForm extends BaseForm {
     private final boolean finalWeek;
 
     private boolean hidePromo;
+
+    private void UpdateUISize(){
+        float newSize = Settings.UISize;
+        engLabel.setFont(engLabel.getFont().deriveFont(Math.max(Settings.DEFAULT_ENG_SIZE + Settings.DEFAULT_ENG_SIZE * newSize, Settings.MIN_SIZE)));
+        kyrLabel.setFont(kyrLabel.getFont().deriveFont(Math.max(Settings.DEFAULT_KYR_SIZE + Settings.DEFAULT_KYR_SIZE * newSize, Settings.MIN_SIZE)));
+        ruLabel.setFont(ruLabel.getFont().deriveFont(Math.max(Settings.DEFAULT_RU_SIZE + Settings.DEFAULT_RU_SIZE * newSize, Settings.MIN_SIZE)));
+        float min = Math.max(Settings.DEFAULT_CREDITS_SIZE + Settings.DEFAULT_CREDITS_SIZE * newSize, Settings.MIN_SIZE);
+        creditsLine1.setFont(creditsLine1.getFont().deriveFont(min));
+        creditsLine2.setFont(creditsLine2.getFont().deriveFont(min));
+        creditsLine3.setFont(creditsLine3.getFont().deriveFont(min));
+        creditsLine4.setFont(creditsLine4.getFont().deriveFont(min));
+        creditsLine5.setFont(creditsLine5.getFont().deriveFont(min));
+    }
+
     private void removeBackgrounds(){
         mainPanel.setBackground(new Color(Color.TRANSLUCENT));
         mainPanel.setOpaque(false);
@@ -93,7 +108,13 @@ public class MainForm extends BaseForm {
     public MainForm(int start, int amount, boolean finalWeek){
         paused = false;
         lessonStarted = false;
-        device[device.length-1].setFullScreenWindow(this);
+        System.out.println("MOnitor " + Settings.monitor);
+        setAlwaysOnTop(true);
+        device[Settings.monitor].setFullScreenWindow(this);
+/*        DisplayMode dm = device[Settings.monitor].getDisplayMode();
+        int screenWidth = dm.getWidth();
+        int screenHeight = dm.getHeight();
+        SetSizeAndCenter(screenWidth, screenHeight);*/
         classLoader = getClass().getClassLoader();
         Instance = this;
         removeBackgrounds();
@@ -109,6 +130,7 @@ public class MainForm extends BaseForm {
         setContentPane(newPanel);
         promoPanel.setVisible(false);
         creditsPanel.setVisible(false);
+        UpdateUISize();
         setVisible(true);
         PrepareSlider();
         StartIntroThread();
