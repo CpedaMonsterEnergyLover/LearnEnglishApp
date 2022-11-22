@@ -13,7 +13,6 @@ import java.util.List;
 
 public class MenuForm extends BaseForm
 {
-    public static float UIsize;
     private JPanel mainPanel;
     private JPanel buttonsPanel;
     private JButton week1Button;
@@ -25,10 +24,11 @@ public class MenuForm extends BaseForm
     private JButton week7Button;
     private JButton week8Button;
     private JButton settingsButton;
-    private JLabel settingLabel;
+    private JLabel UISizeLabel;
     private JSlider UISizeSlider;
     private JPanel settingsPanel;
     private JComboBox monitorBox;
+    private JButton applySettingsButton;
 
     private boolean settingsActive;
     private List<JButton> buttons = new ArrayList<>();
@@ -43,6 +43,8 @@ public class MenuForm extends BaseForm
 
         setVisible(true);
     }
+
+    private float selectedUISize;
 
     private void BuildButtons(){
         buttons.add(week1Button);
@@ -82,21 +84,20 @@ public class MenuForm extends BaseForm
         UISizeSlider.setPaintLabels(true);
 
         UISizeSlider.setValue((int) (Settings.UISize * 100));
+       updateUISizeLabel(Settings.UISize);
 
         UISizeSlider.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseReleased(MouseEvent e) {
-                UIsize = UISizeSlider.getValue();
-                Settings.Instance.Save(UIsize / 100, getSelectedMonitor());
+                selectedUISize = UISizeSlider.getValue() / 100f;
+                updateUISizeLabel(selectedUISize);
             }
         });
 
         monitorBox.setSelectedIndex(Settings.monitor > monitorBox.getItemCount() ? 0 : Settings.monitor);
 
-        monitorBox.addActionListener (new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                Settings.Instance.Save(Settings.UISize, getSelectedMonitor());
-            }
+        applySettingsButton.addActionListener(e -> {
+            Settings.Instance.Save(selectedUISize, getSelectedMonitor());
         });
     }
 
@@ -112,5 +113,9 @@ public class MenuForm extends BaseForm
 
     private int getSelectedMonitor(){
         return monitorBox.getSelectedIndex();
+    }
+
+    private void updateUISizeLabel(float newValue){
+        UISizeLabel.setText("Масштаб текста: " + (newValue * 100) + "%");
     }
 }

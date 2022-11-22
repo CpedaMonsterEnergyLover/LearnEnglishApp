@@ -35,6 +35,7 @@ public class MainForm extends BaseForm {
     private JPanel promoPanel;
     private JSlider progressSlider;
     private JPanel creditsPanel;
+    private JButton jumpButton;
     private final List<String> lines;
 
     private final int start;
@@ -108,13 +109,8 @@ public class MainForm extends BaseForm {
     public MainForm(int start, int amount, boolean finalWeek){
         paused = false;
         lessonStarted = false;
-        System.out.println("MOnitor " + Settings.monitor);
         setAlwaysOnTop(true);
-        device[Settings.monitor].setFullScreenWindow(this);
-/*        DisplayMode dm = device[Settings.monitor].getDisplayMode();
-        int screenWidth = dm.getWidth();
-        int screenHeight = dm.getHeight();
-        SetSizeAndCenter(screenWidth, screenHeight);*/
+        device[Settings.monitor > device.length ? 0 : Settings.monitor].setFullScreenWindow(this);
         classLoader = getClass().getClassLoader();
         Instance = this;
         removeBackgrounds();
@@ -130,10 +126,29 @@ public class MainForm extends BaseForm {
         setContentPane(newPanel);
         promoPanel.setVisible(false);
         creditsPanel.setVisible(false);
+        jumpButton.setVisible(false);
         UpdateUISize();
         setVisible(true);
         PrepareSlider();
+        PrepareJumpButton();
         StartIntroThread();
+    }
+
+    private void PrepareJumpButton(){
+       jumpButton.addActionListener(e -> {
+           int answer = ShowJumpMenu();
+           if(answer != -1) {
+               if(currentThread.isAlive()) currentThread.interrupt();
+               SetPause(false);
+           }
+           if(answer == 0){
+               StartMotivatorsThread(0);
+           } else if(answer == 1){
+               StartLessonTread(0, 0);
+           } else if(answer == 2){
+               StartRepeatThread(0);
+           }
+       });
     }
 
     private void PrepareMusicClip(){
@@ -200,6 +215,7 @@ public class MainForm extends BaseForm {
     }
 
     private void PrepareMotivators(){
+        musicAllowed = true;
         hidePromo = true;
         HidePromo();
         StartMusic();
@@ -225,6 +241,7 @@ public class MainForm extends BaseForm {
     }
 
     private void PrepareLesson(int loop){
+        musicAllowed = true;
         hidePromo = true;
         HidePromo();
         StartMusic();
@@ -235,7 +252,10 @@ public class MainForm extends BaseForm {
         wordNumberLabel.setVisible(true);
     }
 
+    private boolean musicAllowed;
+
     private void PrepareRepeat(){
+        musicAllowed = false;
         hidePromo = false;
         ShowPromo();
         StopMusic();
@@ -277,15 +297,17 @@ public class MainForm extends BaseForm {
     public void SetPause(boolean isPaused){
         if(lessonStarted) {
             if(isPaused){
+                jumpButton.setVisible(true);
                 ShowPromo();
                 paused = true;
                 PauseMusic();
                 progressSlider.setVisible(true);
                 progressSlider.requestFocus();
             } else {
+                jumpButton.setVisible(false);
                 if(hidePromo) HidePromo();
                 progressSlider.setVisible(false);
-                StartMusic();
+                if(musicAllowed) StartMusic();
                 paused = false;
             }
         } else {
@@ -301,11 +323,6 @@ public class MainForm extends BaseForm {
             StopMusic();
             currentThread.interrupt();
         }
-/*        try {
-            GlobalScreen.unregisterNativeHook();
-        } catch (NativeHookException nativeHookException) {
-            nativeHookException.printStackTrace();
-        }*/
         Instance = null;
         new MenuForm();
     }
@@ -393,7 +410,7 @@ public class MainForm extends BaseForm {
                     engLabel.setText(words[0]);
                     kyrLabel.setText(words[1]);
                     ruLabel.setText(words[2]);
-                    wordNumberLabel.setText("" + counter);
+                    wordNumberLabel.setText("" + (counter + 1));
                     counter++;
 
                     try {
@@ -454,6 +471,7 @@ public class MainForm extends BaseForm {
                     clip = AudioSystem.getClip();
                     ais = AudioSystem.getAudioInputStream(defaultSound);
                     clip.open(ais);
+                    ais.close();
                 } catch (LineUnavailableException | UnsupportedAudioFileException | IOException e) {
                     e.printStackTrace();
                 }
@@ -478,6 +496,12 @@ public class MainForm extends BaseForm {
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
+                }
+
+                try {
+                    Thread.sleep(500);
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
                 }
             });
             if(Thread.currentThread().isInterrupted()) return;
@@ -506,7 +530,6 @@ public class MainForm extends BaseForm {
     private boolean musicPaused;
 
     private void StartMusic(){
-
         if(musicPaused && pausedClipTime > -1) {
             currentMusicClip.setMicrosecondPosition(pausedClipTime);
         } else if(isPlaying) return;
@@ -535,4 +558,19 @@ public class MainForm extends BaseForm {
         progressSlider.setValue(stagemin + value);
     }
 
+    private int ShowJumpMenu(){
+        Object[] options = {
+                "Установки",
+                "Словарь",
+                "Озвучка"};
+        return JOptionPane.showOptionDialog(
+                this,
+                "Куда вы хотите перейти?",
+                "Перейти к...",
+                JOptionPane.YES_NO_CANCEL_OPTION,
+                JOptionPane.QUESTION_MESSAGE,
+                null,
+                options,
+                options[0]);
+    }
 }

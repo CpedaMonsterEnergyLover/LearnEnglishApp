@@ -44,6 +44,8 @@ public class Settings {
     }
 
     public void Save(float newSize, int newMonitor){
+        UISize = newSize;
+        monitor = newMonitor;
         try {
             FileWriter myWriter = new FileWriter(configFileName);
             myWriter.write(String.valueOf(newSize));
