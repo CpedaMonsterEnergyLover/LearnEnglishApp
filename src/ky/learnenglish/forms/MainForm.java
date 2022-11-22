@@ -66,44 +66,26 @@ public class MainForm extends BaseForm {
     }
 
     private void removeBackgrounds(){
-        mainPanel.setBackground(new Color(Color.TRANSLUCENT));
-        mainPanel.setOpaque(false);
-        mainPanel.repaint();
-        engLabel.setBackground(new Color(Color.TRANSLUCENT));
-        engLabel.setOpaque(false);
-        engLabel.repaint();
-        kyrLabel.setBackground(new Color(Color.TRANSLUCENT));
-        kyrLabel.setOpaque(false);
-        kyrLabel.repaint();
-        ruLabel.setBackground(new Color(Color.TRANSLUCENT));
-        ruLabel.setOpaque(false);
-        ruLabel.repaint();
-        creditsPanel.setBackground(new Color(Color.TRANSLUCENT));
-        creditsPanel.setOpaque(false);
-        creditsPanel.repaint();
-        wordNumberLabel.setBackground(new Color(Color.TRANSLUCENT));
-        wordNumberLabel.setOpaque(false);
-        wordNumberLabel.repaint();
-        labelPanel.setBackground(new Color(Color.TRANSLUCENT));
-        labelPanel.setOpaque(false);
-        labelPanel.repaint();
-        promoPanel.setBackground(new Color(Color.TRANSLUCENT));
-        promoPanel.setOpaque(false);
-        promoPanel.repaint();
-        leftPromoLabel.setBackground(new Color(Color.TRANSLUCENT));
-        leftPromoLabel.setOpaque(false);
-        leftPromoLabel.repaint();
-        rightPromoLabel.setBackground(new Color(Color.TRANSLUCENT));
-        rightPromoLabel.setOpaque(false);
-        rightPromoLabel.repaint();
-        progressSlider.setBackground(new Color(Color.TRANSLUCENT));
-        progressSlider.setOpaque(false);
-        progressSlider.repaint();
-
+        RemoveBGs(mainPanel);
+        RemoveBGs(engLabel);
+        RemoveBGs(kyrLabel);
+        RemoveBGs(ruLabel);
+        RemoveBGs(creditsPanel);
+        RemoveBGs(wordNumberLabel);
+        RemoveBGs(labelPanel);
+        RemoveBGs(promoPanel);
+        RemoveBGs(leftPromoLabel);
+        RemoveBGs(rightPromoLabel);
+        RemoveBGs(progressSlider);
     }
 
+    private void RemoveBGs(JComponent component){
+        component.setBackground(new Color(Color.TRANSLUCENT));
+        component.setOpaque(false);
+        component.repaint();
+    }
 
-    static GraphicsDevice device[] = GraphicsEnvironment
+    static GraphicsDevice[] device = GraphicsEnvironment
             .getLocalGraphicsEnvironment().getScreenDevices();
 
     public MainForm(int start, int amount, boolean finalWeek){
