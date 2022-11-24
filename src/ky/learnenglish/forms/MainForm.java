@@ -141,7 +141,7 @@ public class MainForm extends BaseForm {
             currentMusicClip.open(ais);
             currentMusicClip.setFramePosition(0);
             currentMusicClip.loop(Clip.LOOP_CONTINUOUSLY);
-            currentMusicClip.stop();
+            //currentMusicClip.stop();
         } catch (LineUnavailableException | UnsupportedAudioFileException | IOException e) {
             e.printStackTrace();
         }
@@ -372,7 +372,7 @@ public class MainForm extends BaseForm {
             try {
                 kyrLabel.setText("Приготовьтесь к уроку");
                 Thread.sleep(20000);
-                StartLessonTread(0, 0);
+                StartLessonTread(0, 1);
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
             }
